@@ -18,6 +18,8 @@ CUPCAKE_DATA = {"flavor": "TestFlavor", "size": "TestSize", "rating": 5, "image"
 
 CUPCAKE_DATA_2 = {"flavor": "TestFlavor2", "size": "TestSize2", "rating": 10, "image": "http://test.com/cupcake2.jpg"}
 
+CUPCAKE_DATA_3 = {"flavor": "TestFlavor3", "size": "TestSize2", "rating": 10, "image": "http://test.com/cupcake2.jpg"}
+
 
 class CupcakeViewsTestCase(TestCase):
     """Tests for views of API."""
@@ -105,3 +107,25 @@ class CupcakeViewsTestCase(TestCase):
             )
 
             self.assertEqual(Cupcake.query.count(), 2)
+
+    def test_delete_cupcake(self):
+        with app.test_client() as client:
+            url = f"/api/cupcakes/{self.cupcake.id}"
+            resp = client.delete(url)
+            # assert a in b: assertIn(a,b)
+            self.assertIn("Deleted record", resp.json["message"])
+            self.assertEqual(resp.status_code, 200)
+            record_or_none = Cupcake.query.get(self.cupcake.id)
+            self.assertIsNone(record_or_none)
+
+    def test_patch_cupcake(self):
+        with app.test_client() as client:
+            url = f"/api/cupcakes/{self.cupcake.id}"
+            resp = client.patch(url, json=CUPCAKE_DATA_3)
+            self.assertEqual(resp.status_code, 200)
+            data = resp.json
+            data_flavor = data["cupcake"]["flavor"]
+            data_size = data["cupcake"]["size"]
+
+            self.assertEqual(data_flavor, "TestFlavor3")
+            self.assertEqual(data_size, "TestSize2")
