@@ -129,3 +129,16 @@ class CupcakeViewsTestCase(TestCase):
 
             self.assertEqual(data_flavor, "TestFlavor3")
             self.assertEqual(data_size, "TestSize2")
+
+    def test_404_cupcake(self):
+        with app.test_client() as client:
+            url = f"/api/cupcakes/100"
+            # test PATCH
+            resp = client.patch(url, json=CUPCAKE_DATA_3)
+            self.assertEqual(resp.status_code, 404)
+            # test DELETE
+            resp = client.delete(url)
+            self.assertEqual(resp.status_code, 404)
+            # test GET
+            resp = client.get(url)
+            self.assertEqual(resp.status_code, 404)

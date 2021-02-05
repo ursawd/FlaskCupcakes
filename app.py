@@ -18,6 +18,12 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 connect_db(app)
 
 # ----------------------------------------------------------------------
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template("404.html"), 404
+
+
+# ----------------------------------------------------------------------
 def serialize_cupcake(cupcake):
     """takes db record and returns dict of db record"""
     return {
