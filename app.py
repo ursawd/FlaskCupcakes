@@ -30,6 +30,14 @@ def serialize_cupcake(cupcake):
 
 
 # ----------------------------------------------------------------------
+@app.route("/")
+def index():
+    """index route renders index.html"""
+
+    return render_template("index.html")
+
+
+# ----------------------------------------------------------------------
 @app.route("/api/cupcakes")
 def return_cupcakes():
     """return list of cupcakes as JSON"""
